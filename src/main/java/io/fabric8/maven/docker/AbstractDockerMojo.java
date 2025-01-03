@@ -2,6 +2,8 @@ package io.fabric8.maven.docker;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +12,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.ImmutableList;
 import io.fabric8.maven.docker.access.DockerAccess;
 import io.fabric8.maven.docker.access.DockerAccessException;
 import io.fabric8.maven.docker.access.ExecException;
@@ -491,8 +492,8 @@ public abstract class AbstractDockerMojo extends AbstractMojo implements ConfigH
         return dispatcher;
     }
 
-    private ImmutableList<ImageConfiguration> getAllImages() {
-        ImmutableList.Builder<ImageConfiguration> allImages = ImmutableList.builder();
+    private List<ImageConfiguration> getAllImages() {
+        ArrayList<ImageConfiguration> allImages = new ArrayList<>();
         if (images != null) {
             allImages.addAll(images);
         }
@@ -504,7 +505,7 @@ public abstract class AbstractDockerMojo extends AbstractMojo implements ConfigH
                 allImages.add(config);
             });
         }
-        return allImages.build();
+        return Collections.unmodifiableList(allImages);
     }
 
     public ImagePullManager getImagePullManager(String imagePullPolicy, String autoPull) {
